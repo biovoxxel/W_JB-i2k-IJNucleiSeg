@@ -20,8 +20,8 @@ inputDir = "/dockershare/666/in/";
 outputDir = "/dockershare/666/out/";
 
 // Functional parameters
-LapRad = 5;
-LapThr = -0.5;
+MedRad = 1;
+Sigma = 30.0;
 
 arg = getArgument();
 parts = split(arg, ",");
@@ -30,8 +30,8 @@ for(i=0; i<parts.length; i++) {
 	nameAndValue = split(parts[i], "=");
 	if (indexOf(nameAndValue[0], "input")>-1) inputDir=nameAndValue[1];
 	if (indexOf(nameAndValue[0], "output")>-1) outputDir=nameAndValue[1];
-	if (indexOf(nameAndValue[0], "radius")>-1) LapRad=nameAndValue[1];
-	if (indexOf(nameAndValue[0], "threshold")>-1) LapThr=nameAndValue[1];
+	if (indexOf(nameAndValue[0], "radius")>-1) MedRad=nameAndValue[1];
+	if (indexOf(nameAndValue[0], "sigma")>-1) Sigma=nameAndValue[1];
 }
 
 images = getFileList(inputDir);
@@ -46,11 +46,11 @@ for(i=0; i<images.length; i++) {
 	// performing a flat-field correction
 		run("Duplicate...", "title=[dup_"+image+"]");
 		duplicate = getTitle();
-		run("Gaussian Blur...", "sigma=30");
+		run("Gaussian Blur...", "sigma="+Sigma);
 		getStatistics(area, mean);
 		run("Calculator Plus", "i1="+image+" i2="+duplicate+" operation=[Divide: i2 = (i1/i2) x k1 + k2] k1="+mean+" k2=0 create");
 	
-		run("Median...", "radius=1");
+		run("Median...", "radius=" + MedRad);
 		lightingCorrected = getTitle();
 	
 		// Segment
