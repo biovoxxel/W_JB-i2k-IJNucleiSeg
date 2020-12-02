@@ -1,5 +1,5 @@
 {
-  "command-line": "python wrapper.py CYTOMINE_HOST CYTOMINE_PUBLIC_KEY CYTOMINE_PRIVATE_KEY CYTOMINE_ID_PROJECT CYTOMINE_ID_SOFTWARE IJ_RADIUS IJ_THRESHOLD ",
+  "command-line": "python wrapper.py CYTOMINE_HOST CYTOMINE_PUBLIC_KEY CYTOMINE_PRIVATE_KEY CYTOMINE_ID_PROJECT CYTOMINE_ID_SOFTWARE IJ_RADIUS IJ_SIGMA ",
   "inputs": [
     {
       "name": "Cytomine host",
@@ -52,9 +52,9 @@
       "command-line-flag": "--@id"
     },
     {
-      "default-value": 5,
+      "default-value": 1,
       "name": "Radius",
-      "description": "Radius for Laplacian filter",
+      "description": "Radius for Median filter",
       "set-by-server": false,
       "value-key": "@ID",
       "optional": true,
@@ -63,13 +63,13 @@
       "command-line-flag": "--@id"
     },
     {
-      "default-value": -0.5,
-      "name": "Threshold",
-      "description": "Segmentation threshold",
+      "default-value": 30.0,
+      "name": "Sigma",
+      "description": "Flat-field Gaussian sigma",
       "set-by-server": false,
       "value-key": "@ID",
       "optional": true,
-      "id": "ij_threshold",
+      "id": "ij_sigma",
       "type": "Number",
       "command-line-flag": "--@id"
     }
