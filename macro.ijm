@@ -42,14 +42,26 @@ for(i=0; i<images.length; i++) {
 		// Open image
 		open(inputDir + "/" + image);
 		wait(100);
-		// Processing
-		run("FeatureJ Laplacian", "compute smoothing="+d2s(LapRad,2));
-		getMinAndMax(min,max);
-		setThreshold(min,LapThr);
-		run("Convert to Mask");
+		// Pre-processing
+	// performing a flat-field correction
+		run("Duplicate...", "title=[dup_"+image+"]");
+		duplicate = getTitle();
+		run("Gaussian Blur...", "sigma=30");
+		getStatistics(area, mean);
+		run("Calculator Plus", "i1="+image+" i2="+duplicate+" operation=[Divide: i2 = (i1/i2) x k1 + k2] k1="+mean+" k2=0 create");
+	
+		run("Median...", "radius=1");
+		lightingCorrected = getTitle();
+	
+		// Segment
+		setOption("BlackBackground", true);
+		run("Auto Threshold", "method=Li white");
+		run("Dilate");
 		run("Watershed");
-		run("Analyze Particles...", "show=[Count Masks] clear include in_situ");
-		
+
+		// Analyze
+		run("Analyze Particles...", "size=20-Infinity circularity=0.50-1.00 show=[Count Masks] clear include in_situ");
+
 		// Export results
 		save(outputDir + "/" + image);
 		
